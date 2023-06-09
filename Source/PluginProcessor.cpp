@@ -8,6 +8,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include <RubberBandStretcher.h>
 
 //==============================================================================
 PitchScalerAudioProcessor::PitchScalerAudioProcessor()
@@ -22,6 +23,7 @@ PitchScalerAudioProcessor::PitchScalerAudioProcessor()
                        )
 #endif
 {
+    
 }
 
 PitchScalerAudioProcessor::~PitchScalerAudioProcessor()
@@ -93,8 +95,11 @@ void PitchScalerAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void PitchScalerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    auto stretcher = RubberBand::RubberBandStretcher(
+        sampleRate, 2,
+        RubberBand::RubberBandStretcher::OptionProcessRealTime |
+        RubberBand::RubberBandStretcher::OptionPitchHighConsistency);
+
 }
 
 void PitchScalerAudioProcessor::releaseResources()
