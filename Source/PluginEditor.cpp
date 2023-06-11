@@ -71,9 +71,9 @@ void PitchScalerAudioProcessorEditor::resized()
 
     //set bounds for crispiness slider
     auto crispynessArea = bounds.removeFromRight(bounds.getWidth() * 0.5);
-    auto togglArea = crispynessArea.removeFromLeft(crispynessArea.getWidth()) * 0.1;
-    formantToggle.setBounds(togglArea);
+    auto toggleButtonArea = crispynessArea.removeFromLeft(crispynessArea.getWidth() * 0.2);
     crispynessSlider.setBounds(crispynessArea);
+    formantToggle.setBounds(toggleButtonArea);
     
 
     //defining areas for the shiftsliders
