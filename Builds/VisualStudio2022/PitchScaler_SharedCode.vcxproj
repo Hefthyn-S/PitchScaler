@@ -46,11 +46,11 @@
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)..\..\rubberband\otherbuilds\x64\Debug;$(ProjectDir)..\..\rubberband\rubberband;$(ProjectDir)..\..\rubberband\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\rubberband\ladspa-lv2;$(ProjectDir)..\..\rubberband\otherbuilds\x64\Debug;$(ProjectDir)..\..\rubberband\rubberband;$(ProjectDir)..\..\rubberband\src;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\..\rubberband\otherbuilds\x64\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)..\..\rubberband\otherbuilds\x64\Debug;$(ProjectDir)..\..\rubberband\rubberband;$(ProjectDir)..\..\rubberband\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\..\rubberband\ladspa-lv2;$(ProjectDir)..\..\rubberband\otherbuilds\x64\Debug;$(ProjectDir)..\..\rubberband\rubberband;$(ProjectDir)..\..\rubberband\src;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\..\rubberband\otherbuilds\x64\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -146,6 +146,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\PitchShifter.cpp" />
     <ClCompile Include="..\..\Source\PluginProcessor.cpp" />
     <ClCompile Include="..\..\Source\PluginEditor.cpp" />
     <ClCompile Include="..\..\..\..\..\Desktop\audio programming\JUCE\modules\juce_analytics\analytics\juce_Analytics.cpp">
@@ -2703,6 +2704,7 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_video.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\PitchShifter.h" />
     <ClInclude Include="..\..\Source\PluginProcessor.h" />
     <ClInclude Include="..\..\Source\PluginEditor.h" />
     <ClInclude Include="..\..\..\..\..\Desktop\audio programming\JUCE\modules\juce_analytics\analytics\juce_Analytics.h" />

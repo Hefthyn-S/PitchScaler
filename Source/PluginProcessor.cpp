@@ -8,7 +8,6 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include <RubberBandStretcher.h>
 
 //==============================================================================
 PitchScalerAudioProcessor::PitchScalerAudioProcessor()
@@ -95,10 +94,8 @@ void PitchScalerAudioProcessor::changeProgramName (int index, const juce::String
 //==============================================================================
 void PitchScalerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    auto stretcher = RubberBand::RubberBandStretcher(
-        sampleRate, 2,
-        RubberBand::RubberBandStretcher::OptionProcessRealTime |
-        RubberBand::RubberBandStretcher::OptionPitchHighConsistency);
+    pitchShifter = std::make_unique<PitchShifter>(
+        sampleRate, getTotalNumInputChannels());
 
 }
 
@@ -155,12 +152,20 @@ void PitchScalerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
+    
+    Settings settings {apvts.getParameter("Octave Shift")->getValue(),
+    	apvts.getParameter("Semitone Shift")->getValue(),
+    	apvts.getParameter("Cent Shift")->getValue(),
+    	apvts.getParameter("Wet Amount")->getValue(),
+		apvts.getParameter("Crispyness")->getValue(),
+        1
+     };
+    std::vector<float*> channel_pointers;
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
+        channel_pointers.emplace_back(buffer.getWritePointer(channel));
     }
+    pitchShifter->processBlock(settings, buffer.getNumSamples(), channel_pointers);
 }
 
 //==============================================================================
