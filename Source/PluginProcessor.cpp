@@ -157,6 +157,7 @@ void PitchScalerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     	apvts.getParameter("Semitone Shift")->getValue()*12,
     	apvts.getParameter("Cent Shift")->getValue()*100,
     	apvts.getParameter("Wet Amount")->getValue(),
+        apvts.getParameter("Dry Amount")->getValue(),
 		apvts.getParameter("Crispyness")->getValue()*3,
         apvts.getParameter("Octave Formant")->getValue()*4-2
      };

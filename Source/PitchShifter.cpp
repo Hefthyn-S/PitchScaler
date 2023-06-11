@@ -4,7 +4,7 @@
 PitchShifter::PitchShifter(int sampleRate, size_t channels)
     : m_latency(nullptr), m_cents(nullptr), m_semitones(nullptr),
     m_octaves(nullptr), m_crispness(nullptr), m_formant(nullptr),
-    m_wetDry(nullptr), m_ratio(1.0), m_prevRatio(1.0),
+    m_wet(nullptr), m_dry(nullptr), m_ratio(1.0), m_prevRatio(1.0),
     m_currentCrispness(-1), m_currentFormant(false), m_blockSize(1024),
     m_reserve(8192), m_bufsize(0), m_minfill(0),
     m_stretcher(new RubberBand::RubberBandStretcher(
@@ -109,20 +109,18 @@ void PitchShifter::runImpl(uint32_t count)
     }
 
     float mix = 0.0;
-    if (m_wetDry) mix = *m_wetDry;
+    if (m_wet) mix = *m_wet;
 
     for (size_t c = 0; c < m_channels; ++c) {
-        if (mix > 0.0) {
             for (size_t i = 0; i < count; ++i) {
                 float dry = m_delayMixBuffer[c]->readOne();
-                m_output[c][i] *= (1.0 - mix);
-                m_output[c][i] += dry * mix;
+                m_output[c][i] *= (1-mix);
+                m_output[c][i] += *m_dry * dry;
             }
-        }
-        else {
-            m_delayMixBuffer[c]->skip(count);
-        }
+       
     }
+
+   
 }
 
 void PitchShifter::runImpl(uint32_t count, uint32_t offset)
@@ -269,7 +267,8 @@ void PitchShifter::loadSettings(Settings& settings)
 	m_octaves = &settings.octaves_value;
 	m_semitones = &settings.semitones_value;
 	m_cents = &settings.cents_value;
-	m_wetDry = &settings.wet_dry_value;
+	m_wet = &settings.wet_value;
+    m_dry = &settings.dry_value;
 	m_crispness = &settings.crispness_value;
 	m_formant = &settings.formant_value;
 }
