@@ -21,26 +21,26 @@
         <CONFIGURATION isDebug="0" name="Release" targetName="PitchScaler"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_analytics" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_gui_basics" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_graphics" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_events" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_core" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_data_structures" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_audio_basics" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_audio_devices" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_audio_utils" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_box2d" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_cryptography" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_dsp" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_opengl" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_osc" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_product_unlocking" path="../../Juce-Base/modules"/>
-        <MODULEPATH id="juce_video" path="../../Juce-Base/modules"/>
+        <MODULEPATH id="juce_analytics" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_graphics" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_events" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_core" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_data_structures" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_basics" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_devices" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_formats" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_processors" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_extra" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_utils" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_box2d" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_cryptography" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_dsp" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_opengl" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_osc" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_product_unlocking" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
+        <MODULEPATH id="juce_video" path="..\..\..\Desktop\audio programming\JUCE\modules"/>
       </MODULEPATHS>
     </VS2022>
   </EXPORTFORMATS>
