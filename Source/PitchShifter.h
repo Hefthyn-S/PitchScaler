@@ -10,7 +10,7 @@ struct Settings
 	float cents_value;
 	float wet_dry_value;
 	float crispness_value;
-	float format_value;
+	float formant_value;
 };
 
 namespace RubberBand {

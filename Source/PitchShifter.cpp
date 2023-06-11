@@ -271,7 +271,7 @@ void PitchShifter::loadSettings(Settings& settings)
 	m_cents = &settings.cents_value;
 	m_wetDry = &settings.wet_dry_value;
 	m_crispness = &settings.crispness_value;
-	m_formant = &settings.format_value;
+	m_formant = &settings.formant_value;
 }
 
 void PitchShifter::processBlock(Settings& settings, int num_samples, std::vector<float*> channel_pointers)

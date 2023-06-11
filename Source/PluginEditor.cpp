@@ -132,7 +132,6 @@ std::vector<juce::Component*> PitchScalerAudioProcessorEditor::getComps()
 void PitchScalerAudioProcessorEditor::siderEditor()
 {
     crispynessSlider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
-    
 
     
     semiTomeShiftSlider.setRotaryParameters(0.f, 6.28f, m_AtLimit);

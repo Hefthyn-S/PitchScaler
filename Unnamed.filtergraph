@@ -5,7 +5,7 @@
     <PLUGIN name="Audio Input" descriptiveName="" format="Internal" category="I/O devices"
             manufacturer="JUCE" version="1.0" file="" uniqueId="246006c0"
             isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
-            numOutputs="6" isShell="0" hasARAExtension="0" uid="246006c0"/>
+            numOutputs="2" isShell="0" hasARAExtension="0" uid="246006c0"/>
     <STATE>0.</STATE>
     <LAYOUT>
       <INPUTS>
@@ -39,7 +39,7 @@
     <STATE>0.</STATE>
     <LAYOUT>
       <INPUTS>
-        <BUS index="0" layout="L R C Lfe Ls Rs"/>
+        <BUS index="0" layout="L R"/>
       </INPUTS>
       <OUTPUTS>
         <BUS index="0" layout="disabled"/>
@@ -61,10 +61,11 @@
       </OUTPUTS>
     </LAYOUT>
   </FILTER>
-  <FILTER uid="5" x="0.4525" y="0.6955645161290323" useARA="0">
+  <FILTER uid="5" x="0.4525" y="0.6955645161290323" useARA="0" uiLastX_Normal="24"
+          uiLastY_Normal="297" uiopen_Normal="0">
     <PLUGIN name="PitchScaler" format="VST3" category="Fx" manufacturer="yourcompany"
             version="1.0.0" file="C:\VST3\PitchScaler.vst3" uniqueId="3a6a717"
-            isInstrument="0" fileTime="188a9b92982" infoUpdateTime="188a9be65dc"
+            isInstrument="0" fileTime="188aa20ecfa" infoUpdateTime="188aa27d623"
             numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
             uid="e95b43ae"/>
     <STATE>191.VMjLgXK....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9XCLt3hKt3hKt3hKt3hYRUUSTEETIckVwTjQisVTTgkdEYjKAQjYPQSPWgUdMcjKAQjct3hdA4hKt3hKt3hKtnTUv.UQAslXuk0UXoWUFE0YQcEV77RRC8Vav8lak4Fc9vyKVMEUy.Ea0cVZtMEcgQWY9..</STATE>
@@ -77,6 +78,8 @@
       </OUTPUTS>
     </LAYOUT>
   </FILTER>
+  <CONNECTION srcFilter="1" srcChannel="0" dstFilter="5" dstChannel="0"/>
+  <CONNECTION srcFilter="1" srcChannel="1" dstFilter="5" dstChannel="1"/>
   <CONNECTION srcFilter="5" srcChannel="0" dstFilter="3" dstChannel="0"/>
   <CONNECTION srcFilter="5" srcChannel="1" dstFilter="3" dstChannel="1"/>
 </FILTERGRAPH>

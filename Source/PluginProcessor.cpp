@@ -153,12 +153,12 @@ void PitchScalerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
     
-    Settings settings {apvts.getParameter("Octave Shift")->getValue(),
-    	apvts.getParameter("Semitone Shift")->getValue(),
-    	apvts.getParameter("Cent Shift")->getValue(),
+    Settings settings {apvts.getParameter("Octave Shift")->getValue()*4-2,
+    	apvts.getParameter("Semitone Shift")->getValue()*12,
+    	apvts.getParameter("Cent Shift")->getValue()*100,
     	apvts.getParameter("Wet Amount")->getValue(),
-		apvts.getParameter("Crispyness")->getValue(),
-        1
+		apvts.getParameter("Crispyness")->getValue()*3,
+        apvts.getParameter("Octave Formant")->getValue()*4-2
      };
     std::vector<float*> channel_pointers;
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
@@ -210,7 +210,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout PitchScalerAudioProcessor::c
 
     layout.add(std::make_unique<juce::AudioParameterFloat>("Crispyness", "Crispyness", juce::NormalisableRange<float>(0.f, 3.f, 0.1f, 1.f), 0));
 
-
+    
     return layout;
 }
 
