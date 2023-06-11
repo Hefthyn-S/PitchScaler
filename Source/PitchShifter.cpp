@@ -5,7 +5,7 @@ PitchShifter::PitchShifter(int sampleRate, size_t channels)
     : m_latency(nullptr), m_cents(nullptr), m_semitones(nullptr),
     m_octaves(nullptr), m_crispness(nullptr), m_formant(nullptr),
     m_wet(nullptr), m_dry(nullptr), m_ratio(1.0), m_prevRatio(1.0),
-    m_currentCrispness(-1), m_currentFormant(false), m_blockSize(1024),
+    m_currentCrispness(-1), m_blockSize(1024),
     m_reserve(8192), m_bufsize(0), m_minfill(0),
     m_stretcher(new RubberBand::RubberBandStretcher(
         sampleRate, channels,
@@ -109,7 +109,7 @@ void PitchShifter::runImpl(uint32_t count)
     }
 
     float mix = 0.0;
-    if (m_wet) mix = *m_wet;
+    if (m_wet) mix = 1-*m_wet;
 
     for (size_t c = 0; c < m_channels; ++c) {
             for (size_t i = 0; i < count; ++i) {
@@ -250,16 +250,8 @@ void PitchShifter::updateCrispness()
 
 void PitchShifter::updateFormant()
 {
-    if (!m_formant) return;
-
-    bool f = (*m_formant > 0.5f);
-    if (f == m_currentFormant) return;
-
     RubberBand::RubberBandStretcher* s = m_stretcher;
-
-    s->setFormantOption(f ? RubberBand::RubberBandStretcher::OptionFormantPreserved : RubberBand::RubberBandStretcher::OptionFormantShifted);
-
-    m_currentFormant = f;
+    s->setFormantOption(m_formant ? RubberBand::RubberBandStretcher::OptionFormantPreserved : RubberBand::RubberBandStretcher::OptionFormantShifted);
 }
 
 void PitchShifter::loadSettings(Settings& settings)
@@ -270,7 +262,7 @@ void PitchShifter::loadSettings(Settings& settings)
 	m_wet = &settings.wet_value;
     m_dry = &settings.dry_value;
 	m_crispness = &settings.crispness_value;
-	m_formant = &settings.formant_value;
+	m_formant = settings.formant_value;
 }
 
 void PitchShifter::processBlock(Settings& settings, int num_samples, std::vector<float*> channel_pointers)

@@ -55,6 +55,7 @@ private:
         drySlider,
         wetSlider;
     juce::Slider crispynessSlider;
+    juce::ToggleButton formantToggle;
 
     using APVTS = juce::AudioProcessorValueTreeState;
     using Attachment = APVTS::SliderAttachment;
@@ -68,6 +69,7 @@ private:
         drySliderAttachment,
         wetSliderAttachment,
         crispynessSliderAttachment;
+        APVTS::ButtonAttachment  formantToggleAttachment;
 
 
     std::vector<juce::Component*> getComps();

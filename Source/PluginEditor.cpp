@@ -21,7 +21,8 @@ PitchScalerAudioProcessorEditor::PitchScalerAudioProcessorEditor (PitchScalerAud
     formantCentSliderAttachment(audioProcessor.apvts, "Cent Formant", formantCentSlider),
     drySliderAttachment(audioProcessor.apvts, "Dry Amount", drySlider),
     wetSliderAttachment(audioProcessor.apvts, "Wet Amount", wetSlider),
-    crispynessSliderAttachment(audioProcessor.apvts, "Crispyness", crispynessSlider)
+    crispynessSliderAttachment(audioProcessor.apvts, "Crispyness", crispynessSlider),
+	formantToggleAttachment(audioProcessor.apvts,"Formant Toggle",formantToggle)
 {
     for (auto* comp : getComps())
     {
@@ -70,6 +71,8 @@ void PitchScalerAudioProcessorEditor::resized()
 
     //set bounds for crispiness slider
     auto crispynessArea = bounds.removeFromRight(bounds.getWidth() * 0.5);
+    auto togglArea = crispynessArea.removeFromLeft(crispynessArea.getWidth()) * 0.1;
+    formantToggle.setBounds(togglArea);
     crispynessSlider.setBounds(crispynessArea);
     
 
@@ -124,7 +127,8 @@ std::vector<juce::Component*> PitchScalerAudioProcessorEditor::getComps()
         &formantCentSlider,
         &drySlider,
         &wetSlider,
-        &crispynessSlider
+        &crispynessSlider,
+        &formantToggle
 
     };
 }
@@ -190,10 +194,7 @@ void PitchScalerAudioProcessorEditor::sliderValueManipulator()
 
     semiTomeShiftSlider.onValueChange = [this]()
     {
-        /*semiTomeShiftSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxBelow,
-            true,
-            10,
-            10);*/
+        
         if (semiTomeShiftSlider.getValue() == m_SemitoneMax && m_SemiToneValue == 0)
         {
             octaveShiftSlider.setValue(octaveShiftSlider.getValue() - 1);
@@ -295,6 +296,7 @@ void PitchScalerAudioProcessorEditor::sliderValueManipulator()
         }
         m_CentFormantValue = round(formantCentSlider.getValue());
     };
+    
     
     
 }

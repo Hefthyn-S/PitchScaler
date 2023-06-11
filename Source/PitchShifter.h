@@ -11,7 +11,7 @@ struct Settings
 	float wet_value;
     float dry_value;
 	float crispness_value;
-	float formant_value;
+	bool formant_value;
 };
 
 namespace RubberBand {
@@ -61,13 +61,12 @@ protected:
     float* m_semitones;
     float* m_octaves;
     float* m_crispness;
-    float* m_formant;
+    bool m_formant;
     float* m_wet;
     float* m_dry;
     double m_ratio;
     double m_prevRatio;
     int m_currentCrispness;
-    bool m_currentFormant;
 
     size_t m_blockSize;
     size_t m_reserve;

@@ -152,20 +152,25 @@ void PitchScalerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    
-    Settings settings {apvts.getParameter("Octave Shift")->getValue()*4-2,
-    	apvts.getParameter("Semitone Shift")->getValue()*12,
-    	apvts.getParameter("Cent Shift")->getValue()*100,
+
+    std::string suffix = apvts.getParameter("Formant Toggle")->getValue() ? " Formant" : " Shift";
+
+    Settings settings {apvts.getParameter("Octave" + suffix)->getValue()*4-2,
+    	apvts.getParameter("Semitone" + suffix)->getValue() * 12,
+    	apvts.getParameter("Cent" + suffix)->getValue()*100,
     	apvts.getParameter("Wet Amount")->getValue(),
         apvts.getParameter("Dry Amount")->getValue(),
 		apvts.getParameter("Crispyness")->getValue()*3,
-        apvts.getParameter("Octave Formant")->getValue()*4-2
+        false
      };
+
     std::vector<float*> channel_pointers;
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         channel_pointers.emplace_back(buffer.getWritePointer(channel));
     }
+
+    
     pitchShifter->processBlock(settings, buffer.getNumSamples(), channel_pointers);
 }
 
@@ -209,7 +214,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout PitchScalerAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterFloat>("Semitone Formant", "Semitone Formant", juce::NormalisableRange<float>(0.f, 12.f, 1.f, 1.f), 0));
     layout.add(std::make_unique<juce::AudioParameterFloat>("Cent Formant", "Cent Formant", juce::NormalisableRange<float>(0.f, 100.f, 1.f, 1.f), 0));
 
-    layout.add(std::make_unique<juce::AudioParameterFloat>("Crispyness", "Crispyness", juce::NormalisableRange<float>(0.f, 3.f, 0.1f, 1.f), 0));
+    layout.add(std::make_unique<juce::AudioParameterFloat>("Crispyness", "Crispyness", juce::NormalisableRange<float>(0.f, 3.f, 1.f, 1.f), 0));
+    layout.add(std::make_unique<juce::AudioParameterBool>("Formant Toggle", "Formant Toggle", false));
 
     
     return layout;
