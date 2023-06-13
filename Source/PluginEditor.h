@@ -14,14 +14,6 @@
 #include "RotarySlidersWithLabels.h"
 #include <memory>
 
-struct CustomRotarySlider : juce::Slider
-{
-    CustomRotarySlider() : juce::Slider(juce::Slider::SliderStyle::Rotary,
-        juce::Slider::TextEntryBoxPosition::NoTextBox)
-    {
-
-    }
-};
 
 //==============================================================================
 /**

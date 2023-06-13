@@ -169,6 +169,7 @@ void PitchScalerAudioProcessorEditor::paint (juce::Graphics& g)
 
 void PitchScalerAudioProcessorEditor::resized()
 {
+    const float sliderSpacing{ 5.f };
     auto bounds = getLocalBounds();
 
     // set bounds for the spectrumAnalyzer
@@ -179,8 +180,10 @@ void PitchScalerAudioProcessorEditor::resized()
     auto dryWetArea = bounds.removeFromLeft(bounds.getWidth() * 0.333);
     auto dryArea = dryWetArea.removeFromBottom(dryWetArea.getHeight() * 0.5);
     auto wetArea = dryWetArea;
+    dryArea = dryArea.reduced(sliderSpacing);
     drySlider.setBounds(dryArea);
-    wetSlider.setBounds(wetArea);
+    wetArea = wetArea.reduced(sliderSpacing);
+    wetSlider.setBounds(wetArea.toNearestInt());
 
     //set bounds for crispiness slider
     auto crispynessArea = bounds.removeFromRight(bounds.getWidth() * 0.5);
@@ -196,11 +199,12 @@ void PitchScalerAudioProcessorEditor::resized()
     shiftArea.setHeight(std::min(shiftArea.getWidth(), shiftArea.getHeight()));
     shiftArea.setCentre(center);
     
-
+    shiftArea = shiftArea.reduced(sliderSpacing);
     octaveShiftSlider.setBounds(shiftArea);
     auto radius = std::min(shiftArea.getWidth(), shiftArea.getHeight()) * 0.5f;
     auto byReducer = radius - 0.75f * radius;
 
+    
     auto semitoneShiftArea = shiftArea.reduced(byReducer);
     semiTomeShiftSlider.setBounds(semitoneShiftArea);
     radius = std::min(semitoneShiftArea.getWidth(), semitoneShiftArea.getHeight()) * 0.5f;
@@ -215,6 +219,8 @@ void PitchScalerAudioProcessorEditor::resized()
 
     formantArea.setLeft(formantArea.getX() + formantArea.getWidth() * 0.5f - formantArea.getHeight() * 0.5f);
     formantArea.setWidth(std::min(formantArea.getWidth(), formantArea.getHeight()));
+    
+    formantArea = formantArea.reduced(sliderSpacing);
     formantOctaveSlider.setBounds(formantArea);
     radius = std::min(formantArea.getWidth(), formantArea.getHeight()) * 0.5f;
     byReducer = radius - 0.75f * radius;
@@ -254,6 +260,7 @@ std::vector<juce::Component*> PitchScalerAudioProcessorEditor::getComps()
 void PitchScalerAudioProcessorEditor::sliderEditor()
 {
     crispynessSlider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
+    crispynessSlider.setTextBoxStyle(juce::Slider::NoTextBox,true,1,1);
 
 
     formantOctaveSlider.setEnabled(formantToggle.getToggleState());

@@ -223,7 +223,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout PitchScalerAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterFloat>("Semitone Formant", "Semitone Formant", juce::NormalisableRange<float>(0.f, 12.f, 1.f, 1.f), 0));
     layout.add(std::make_unique<juce::AudioParameterFloat>("Cent Formant", "Cent Formant", juce::NormalisableRange<float>(0.f, 100.f, 1.f, 1.f), 0));
 
-    layout.add(std::make_unique<juce::AudioParameterFloat>("Crispyness", "Crispyness", juce::NormalisableRange<float>(0.f, 3.f, 1.f, 1.f), 1.5f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>("Crispyness", "Crispyness", juce::NormalisableRange<float>(0.f, 3.f, 1.f, 1.f), 0.f));
     layout.add(std::make_unique<juce::AudioParameterBool>("Formant Toggle", "Formant Toggle", false));
 
 
