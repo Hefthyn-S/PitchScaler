@@ -14,6 +14,14 @@
 PitchScalerAudioProcessorEditor::PitchScalerAudioProcessorEditor (PitchScalerAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p),
     spectrumAnalyzer(std::make_shared<SpectrumAnalyzerComponent>()),
+    octaveShiftSlider(*audioProcessor.apvts.getParameter("Octave Shift"), "Oct", 3.14f * 5/4 ,3.14f * 11/4),
+    semiTomeShiftSlider(*audioProcessor.apvts.getParameter("Semitone Shift"), "Semi",0.f,6.28f),
+    centShiftSlider(*audioProcessor.apvts.getParameter("Cent Shift"), "Cent", 0.f, 6.28f),
+    formantOctaveSlider(*audioProcessor.apvts.getParameter("Octave Formant"), "Oct", 3.14f * 5 / 4, 3.14f * 11 / 4),
+    formantSemitoneSlider(*audioProcessor.apvts.getParameter("Semitone Formant"), "Semi", 0.f, 6.28f),
+    formantCentSlider(*audioProcessor.apvts.getParameter("Cent Formant"), "Cent", 0.f, 6.28f),
+    drySlider(*audioProcessor.apvts.getParameter("Dry Amount"), "%", 3.14f * 5 / 4, 3.14f * 11 / 4),
+    wetSlider(*audioProcessor.apvts.getParameter("Wet Amount"), "%", 3.14f * 5 / 4, 3.14f * 11 / 4),
     octaveShiftSliderAttachment(audioProcessor.apvts, "Octave Shift", octaveShiftSlider),
     semiTomeShiftSliderAttachment(audioProcessor.apvts, "Semitone Shift", semiTomeShiftSlider),
     centShiftSliderAttachment(audioProcessor.apvts, "Cent Shift", centShiftSlider),
@@ -29,9 +37,31 @@ PitchScalerAudioProcessorEditor::PitchScalerAudioProcessorEditor (PitchScalerAud
     {
         addAndMakeVisible(comp);
     }
-    setSize (600, 400);
+    setSize (700, 500);
 
     sliderEditor();
+
+
+    
+    
+
+
+
+    formantToggle.onClick = [this]()
+    {
+        octaveShiftSlider.setEnabled(!formantToggle.getToggleState());
+        semiTomeShiftSlider.setEnabled(!formantToggle.getToggleState());
+        centShiftSlider.setEnabled(!formantToggle.getToggleState());
+        formantOctaveSlider.setEnabled(formantToggle.getToggleState());
+        formantSemitoneSlider.setEnabled(formantToggle.getToggleState());
+        formantCentSlider.setEnabled(formantToggle.getToggleState());
+    };
+
+    octaveShiftSlider.onValueChange = [this]()
+    {
+        semiTomeShiftSlider.setTextHidden(true);
+        centShiftSlider.setTextHidden(true);
+    };
 
     semiTomeShiftSlider.onValueChange = [this]()
     {
@@ -46,6 +76,8 @@ PitchScalerAudioProcessorEditor::PitchScalerAudioProcessorEditor (PitchScalerAud
         }
         m_SemiToneValue = semiTomeShiftSlider.getValue();
         sliderValueManipulator();
+        semiTomeShiftSlider.setTextHidden(false);
+        centShiftSlider.setTextHidden(true);
     };
 
     centShiftSlider.onValueChange = [this]()
@@ -67,6 +99,13 @@ PitchScalerAudioProcessorEditor::PitchScalerAudioProcessorEditor (PitchScalerAud
         }
         m_CentValue = round(centShiftSlider.getValue());
         sliderValueManipulator();
+        centShiftSlider.setTextHidden(false);
+    };
+
+    formantOctaveSlider.onValueChange = [this]()
+    {
+        formantSemitoneSlider.setTextHidden(true);
+        formantCentSlider.setTextHidden(true);
     };
 
     formantSemitoneSlider.onValueChange = [this]()
@@ -81,6 +120,8 @@ PitchScalerAudioProcessorEditor::PitchScalerAudioProcessorEditor (PitchScalerAud
         }
         m_SemiFormantValue = formantSemitoneSlider.getValue();
         sliderValueFormantManipulator();
+        formantSemitoneSlider.setTextHidden(false);
+        formantCentSlider.setTextHidden(true);
     };
 
     formantCentSlider.onValueChange = [this]()
@@ -102,6 +143,7 @@ PitchScalerAudioProcessorEditor::PitchScalerAudioProcessorEditor (PitchScalerAud
         }
         m_CentFormantValue = round(formantCentSlider.getValue());
         sliderValueFormantManipulator();
+        formantCentSlider.setTextHidden(false);
     };
 
 }
@@ -115,7 +157,8 @@ PitchScalerAudioProcessorEditor::~PitchScalerAudioProcessorEditor()
 void PitchScalerAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+    g.fillAll (juce::Colour::fromFloatRGBA(0.1f, 0.5f, 0.8f, 1.0f));
+    
 
 
 
@@ -148,8 +191,12 @@ void PitchScalerAudioProcessorEditor::resized()
 
     //defining areas for the shiftsliders
     auto shiftArea = bounds.removeFromTop(bounds.getHeight() * 0.5);
-    shiftArea.setLeft(shiftArea.getX() + shiftArea.getWidth() * 0.5f - shiftArea.getHeight() * 0.5f);
+    auto center = shiftArea.getCentre();
     shiftArea.setWidth(std::min(shiftArea.getWidth(), shiftArea.getHeight()));
+    shiftArea.setHeight(std::min(shiftArea.getWidth(), shiftArea.getHeight()));
+    shiftArea.setCentre(center);
+    
+
     octaveShiftSlider.setBounds(shiftArea);
     auto radius = std::min(shiftArea.getWidth(), shiftArea.getHeight()) * 0.5f;
     auto byReducer = radius - 0.75f * radius;
@@ -209,12 +256,11 @@ void PitchScalerAudioProcessorEditor::sliderEditor()
     crispynessSlider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
 
 
-    semiTomeShiftSlider.setRotaryParameters(0.f, 6.28f, m_AtLimit);
-    centShiftSlider.setRotaryParameters(0.f, 6.28f, m_AtCentLimit);
-    formantSemitoneSlider.setRotaryParameters(0.f, 6.28f, m_AtFormantLimit);
-    formantCentSlider.setRotaryParameters(0.f, 6.28f, m_AtFormantCentLimit);
+    formantOctaveSlider.setEnabled(formantToggle.getToggleState());
+    formantSemitoneSlider.setEnabled(formantToggle.getToggleState());
+    formantCentSlider.setEnabled(formantToggle.getToggleState());
 
-
+    
     octaveShiftSlider.setDoubleClickReturnValue(true, 0);
     semiTomeShiftSlider.setDoubleClickReturnValue(true, 0);
     centShiftSlider.setDoubleClickReturnValue(true, 0);

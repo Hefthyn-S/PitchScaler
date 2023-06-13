@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "SpectrumAnalyzerComponent.h"
+#include "RotarySlidersWithLabels.h"
 #include <memory>
 
 struct CustomRotarySlider : juce::Slider
@@ -48,7 +49,7 @@ private:
 
     std::shared_ptr<SpectrumAnalyzerComponent> spectrumAnalyzer;
 
-    CustomRotarySlider octaveShiftSlider,
+    RotarySliderWithLabels octaveShiftSlider,
         semiTomeShiftSlider,
         centShiftSlider,
         formantOctaveSlider,
