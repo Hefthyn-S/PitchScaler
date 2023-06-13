@@ -31,7 +31,78 @@ PitchScalerAudioProcessorEditor::PitchScalerAudioProcessorEditor (PitchScalerAud
     }
     setSize (600, 400);
 
-    siderEditor();
+    sliderEditor();
+
+    semiTomeShiftSlider.onValueChange = [this]()
+    {
+
+        if (semiTomeShiftSlider.getValue() == m_SemitoneMax && m_SemiToneValue == 0)
+        {
+            octaveShiftSlider.setValue(octaveShiftSlider.getValue() - 1);
+        }
+        else if (semiTomeShiftSlider.getValue() == 0 && m_SemiToneValue == m_SemitoneMax)
+        {
+            octaveShiftSlider.setValue(octaveShiftSlider.getValue() + 1);
+        }
+        m_SemiToneValue = semiTomeShiftSlider.getValue();
+        sliderValueManipulator();
+    };
+
+    centShiftSlider.onValueChange = [this]()
+    {
+        if (round(centShiftSlider.getValue()) > m_CentMax - 10 && m_CentValue < 10)
+        {
+            if (semiTomeShiftSlider.getValue() == 0 && octaveShiftSlider.getValue() != -2)
+            {
+                semiTomeShiftSlider.setValue(m_SemitoneMax);
+            }
+            else {
+                semiTomeShiftSlider.setValue((static_cast <int> (semiTomeShiftSlider.getValue() - 1)) % 13);
+            }
+        }
+        else if (round(centShiftSlider.getValue()) < 10 && m_CentValue > m_CentMax - 10)
+        {
+            semiTomeShiftSlider.setValue((static_cast <int> (semiTomeShiftSlider.getValue() + 1)) % 13);
+
+        }
+        m_CentValue = round(centShiftSlider.getValue());
+        sliderValueManipulator();
+    };
+
+    formantSemitoneSlider.onValueChange = [this]()
+    {
+        if (formantSemitoneSlider.getValue() == m_SemitoneMax && m_SemiFormantValue == 0)
+        {
+            formantOctaveSlider.setValue(formantOctaveSlider.getValue() - 1);
+        }
+        else if (formantSemitoneSlider.getValue() == 0 && m_SemiFormantValue == m_SemitoneMax)
+        {
+            formantOctaveSlider.setValue(formantOctaveSlider.getValue() + 1);
+        }
+        m_SemiFormantValue = formantSemitoneSlider.getValue();
+        sliderValueFormantManipulator();
+    };
+
+    formantCentSlider.onValueChange = [this]()
+    {
+        if (round(formantCentSlider.getValue()) > m_CentMax - 10 && m_CentFormantValue < 10)
+        {
+            if (formantSemitoneSlider.getValue() == 0 && formantOctaveSlider.getValue() != -2)
+            {
+                formantSemitoneSlider.setValue(m_SemitoneMax);
+            }
+            else {
+                formantSemitoneSlider.setValue((static_cast <int> (formantSemitoneSlider.getValue() - 1)) % 13);
+            }
+        }
+        else if (round(formantCentSlider.getValue()) < 10 && m_CentFormantValue > m_CentMax - 10)
+        {
+            formantSemitoneSlider.setValue((static_cast <int> (formantSemitoneSlider.getValue() + 1)) % 13);
+
+        }
+        m_CentFormantValue = round(formantCentSlider.getValue());
+        sliderValueFormantManipulator();
+    };
 
 }
 
@@ -48,7 +119,7 @@ void PitchScalerAudioProcessorEditor::paint (juce::Graphics& g)
 
 
 
-    sliderValueManipulator();
+    
 }
 
 
@@ -133,7 +204,7 @@ std::vector<juce::Component*> PitchScalerAudioProcessorEditor::getComps()
     };
 }
 
-void PitchScalerAudioProcessorEditor::siderEditor()
+void PitchScalerAudioProcessorEditor::sliderEditor()
 {
     crispynessSlider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
 
@@ -178,40 +249,14 @@ void PitchScalerAudioProcessorEditor::sliderValueManipulator()
     centShiftSlider.setRotaryParameters(0.f, 6.28f, m_AtCentLimit);
 
 
-    semiTomeShiftSlider.onValueChange = [this]()
-    {
+    
+    
 
-        if (semiTomeShiftSlider.getValue() == m_SemitoneMax && m_SemiToneValue == 0)
-        {
-            octaveShiftSlider.setValue(octaveShiftSlider.getValue() - 1);
-        }
-        else if (semiTomeShiftSlider.getValue() == 0 && m_SemiToneValue == m_SemitoneMax)
-        {
-            octaveShiftSlider.setValue(octaveShiftSlider.getValue() + 1);
-        }
-        m_SemiToneValue = semiTomeShiftSlider.getValue();
-    };
+}
 
-    centShiftSlider.onValueChange = [this]()
-    {
-        if (round(centShiftSlider.getValue()) > m_CentMax - 10 && m_CentValue < 10)
-        {
-            if (semiTomeShiftSlider.getValue() == 0 && octaveShiftSlider.getValue() != -2)
-            {
-                semiTomeShiftSlider.setValue(m_SemitoneMax);
-            }
-            else {
-                semiTomeShiftSlider.setValue((static_cast <int> (semiTomeShiftSlider.getValue() - 1)) % 13);
-            }
-        }
-        else if (round(centShiftSlider.getValue()) < 10 && m_CentValue > m_CentMax - 10)
-        {
-            semiTomeShiftSlider.setValue((static_cast <int> (semiTomeShiftSlider.getValue() + 1)) % 13);
-
-        }
-        m_CentValue = round(centShiftSlider.getValue());
-    };
-
+void PitchScalerAudioProcessorEditor::sliderValueFormantManipulator()
+{
+    
     //formant manipulation
     if (formantOctaveSlider.getValue() == -2 && formantSemitoneSlider.getValue() == 0)
     {
@@ -234,38 +279,7 @@ void PitchScalerAudioProcessorEditor::sliderValueManipulator()
     formantCentSlider.setRotaryParameters(0.f, 6.28f, m_AtFormantCentLimit);
 
 
-    formantSemitoneSlider.onValueChange = [this]()
-    {
-        if (formantSemitoneSlider.getValue() == m_SemitoneMax && m_SemiFormantValue == 0)
-        {
-            formantOctaveSlider.setValue(formantOctaveSlider.getValue() - 1);
-        }
-        else if (formantSemitoneSlider.getValue() == 0 && m_SemiFormantValue == m_SemitoneMax)
-        {
-            formantOctaveSlider.setValue(formantOctaveSlider.getValue() + 1);
-        }
-        m_SemiFormantValue = formantSemitoneSlider.getValue();
-    };
 
-    formantCentSlider.onValueChange = [this]()
-    {
-        if (round(formantCentSlider.getValue()) > m_CentMax - 10 && m_CentFormantValue < 10)
-        {
-            if (formantSemitoneSlider.getValue() == 0 && formantOctaveSlider.getValue() != -2)
-            {
-                formantSemitoneSlider.setValue(m_SemitoneMax);
-            }
-            else {
-                formantSemitoneSlider.setValue((static_cast <int> (formantSemitoneSlider.getValue() - 1)) % 13);
-            }
-        }
-        else if (round(formantCentSlider.getValue()) < 10 && m_CentFormantValue > m_CentMax - 10)
-        {
-            formantSemitoneSlider.setValue((static_cast <int> (formantSemitoneSlider.getValue() + 1)) % 13);
-
-        }
-        m_CentFormantValue = round(formantCentSlider.getValue());
-    };
 
 }
 
