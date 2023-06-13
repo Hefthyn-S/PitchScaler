@@ -1,2 +1,10 @@
 .vs
 x64
+Builds/VisualStudio2022/PitchScaler_SharedCode.vcxproj
+Builds/VisualStudio2022/PitchScaler_SharedCode.vcxproj.filters
+Builds/VisualStudio2022/PitchScaler_StandalonePlugin.vcxproj
+Builds/VisualStudio2022/PitchScaler_StandalonePlugin.vcxproj.filters
+Builds/VisualStudio2022/PitchScaler_VST3.vcxproj
+Builds/VisualStudio2022/PitchScaler_VST3.vcxproj.filters
+PitchScaler.jucer
+rubberband/otherbuilds/rubberband-library.sln
