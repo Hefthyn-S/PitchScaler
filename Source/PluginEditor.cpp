@@ -157,9 +157,8 @@ PitchScalerAudioProcessorEditor::~PitchScalerAudioProcessorEditor()
 void PitchScalerAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (juce::Colour::fromFloatRGBA(0.1f, 0.5f, 0.8f, 1.0f));
-    
-
+    auto backgroundImage = juce::ImageCache::getFromFile(juce::File::getCurrentWorkingDirectory().getChildFile("../../Assets/background.png"));
+    g.drawImage(backgroundImage, getLocalBounds().toFloat());
 
 
     
@@ -169,7 +168,7 @@ void PitchScalerAudioProcessorEditor::paint (juce::Graphics& g)
 
 void PitchScalerAudioProcessorEditor::resized()
 {
-    const float sliderSpacing{ 5.f };
+    const float sliderSpacing{ 6.f };
     auto bounds = getLocalBounds();
 
     // set bounds for the spectrumAnalyzer

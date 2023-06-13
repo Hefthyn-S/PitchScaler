@@ -14,7 +14,7 @@ SpectrumAnalyzerComponent::~SpectrumAnalyzerComponent()
 }
 
 void SpectrumAnalyzerComponent::paint(juce::Graphics& g) {
-    g.setColour(juce::Colours::black);
+    g.setColour(juce::Colour::fromFloatRGBA(0.f, 0.f, 0.f, 0.8f));
     g.fillRect(g.getClipBounds());
     g.setColour(juce::Colours::white);
     drawFrame(g);

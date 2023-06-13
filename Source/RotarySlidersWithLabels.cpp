@@ -45,7 +45,7 @@ void LookAndFeel::drawRotarySlider(juce::Graphics& g,
         if (m_TextHidden == false)
         {
 
-            g.setColour(enabled ? Colours::aqua : Colours::darkgrey);
+            g.setColour(enabled ? Colour::fromFloatRGBA(0.3f, 0.7f, 0.9f, 0.8f) : Colours::darkgrey);
             g.fillEllipse(bounds);
 
             g.setFont(rswl->getTextHeight());
