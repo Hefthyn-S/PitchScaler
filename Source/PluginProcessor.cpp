@@ -155,12 +155,12 @@ void PitchScalerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
 
     std::string suffix = apvts.getParameter("Formant Toggle")->getValue() ? " Formant" : " Shift";
 
-    Settings settings {apvts.getParameter("Octave" + suffix)->getValue()*4-2,
-    	apvts.getParameter("Semitone" + suffix)->getValue() * 12,
-    	apvts.getParameter("Cent" + suffix)->getValue()*100,
+    Settings settings {apvts.getRawParameterValue("Octave" + suffix)->load(),
+    	apvts.getRawParameterValue("Semitone" + suffix)->load(),
+    	apvts.getRawParameterValue("Cent" + suffix)->load(),
     	apvts.getParameter("Wet Amount")->getValue(),
         apvts.getParameter("Dry Amount")->getValue(),
-		apvts.getParameter("Crispyness")->getValue()*3,
+		apvts.getRawParameterValue("Crispyness")->load(),
         false
      };
 
@@ -200,12 +200,21 @@ void PitchScalerAudioProcessor::getStateInformation (juce::MemoryBlock& destData
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+
+    juce::MemoryOutputStream mos(destData, true);
+    apvts.state.writeToStream(mos);
 }
 
 void PitchScalerAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+
+    auto tree = juce::ValueTree::readFromData(data, sizeInBytes);
+    if (tree.isValid())
+    {
+        apvts.replaceState(tree);
+    }
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout PitchScalerAudioProcessor::createParameterLayout()
