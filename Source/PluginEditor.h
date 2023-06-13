@@ -10,7 +10,8 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-
+#include "SpectrumAnalyzerComponent.h"
+#include <memory>
 
 struct CustomRotarySlider : juce::Slider
 {
@@ -34,9 +35,8 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-    
-    
-    
+    std::shared_ptr<SpectrumAnalyzerComponent> getSpectrumAnalyzerComponent();
+
 
 private:
     void siderEditor();
@@ -45,6 +45,7 @@ private:
     // access the processor object that created it.
     PitchScalerAudioProcessor& audioProcessor;
 
+    std::shared_ptr<SpectrumAnalyzerComponent> spectrumAnalyzer;
 
     CustomRotarySlider octaveShiftSlider,
         semiTomeShiftSlider,

@@ -22,7 +22,7 @@ PitchScalerAudioProcessor::PitchScalerAudioProcessor()
                        )
 #endif
 {
-    
+
 }
 
 PitchScalerAudioProcessor::~PitchScalerAudioProcessor()
@@ -170,8 +170,15 @@ void PitchScalerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
         channel_pointers.emplace_back(buffer.getWritePointer(channel));
     }
 
-    
+    if (auto s = spectrumAnalyzerComponent.lock()) {
+        s->addBuffer(buffer, Input);
+    }
+
     pitchShifter->processBlock(settings, buffer.getNumSamples(), channel_pointers);
+
+    if (auto s = spectrumAnalyzerComponent.lock()) {
+        s->addBuffer(buffer, Output);
+    }
 }
 
 //==============================================================================
@@ -182,7 +189,9 @@ bool PitchScalerAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* PitchScalerAudioProcessor::createEditor()
 {
-    return new PitchScalerAudioProcessorEditor (*this);
+    auto* editor = new PitchScalerAudioProcessorEditor (*this);
+    spectrumAnalyzerComponent = editor->getSpectrumAnalyzerComponent();
+    return editor;
 }
 
 //==============================================================================
@@ -217,7 +226,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout PitchScalerAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterFloat>("Crispyness", "Crispyness", juce::NormalisableRange<float>(0.f, 3.f, 1.f, 1.f), 0));
     layout.add(std::make_unique<juce::AudioParameterBool>("Formant Toggle", "Formant Toggle", false));
 
-    
+
     return layout;
 }
 
@@ -228,5 +237,3 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new PitchScalerAudioProcessor();
 }
-
-

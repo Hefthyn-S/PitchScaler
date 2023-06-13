@@ -11,9 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "PitchShifter.h"
-
-
-
+#include "SpectrumAnalyzerComponent.h"
 
 
 //==============================================================================
@@ -68,7 +66,8 @@ public:
 private:
 
     std::unique_ptr<PitchShifter> pitchShifter;
-    
+    std::weak_ptr<SpectrumAnalyzerComponent> spectrumAnalyzerComponent;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PitchScalerAudioProcessor)
 };

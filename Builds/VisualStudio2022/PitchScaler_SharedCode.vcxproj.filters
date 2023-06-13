@@ -3297,6 +3297,9 @@
     <ClCompile Include="..\..\Source\PitchShifter.cpp">
       <Filter>PitchScaler\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\SpectrumAnalyzerComponent.cpp">
+      <Filter>PitchScaler\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\PluginProcessor.h">
@@ -6477,6 +6480,9 @@
       <Filter>JUCE Library Code</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PitchShifter.h">
+      <Filter>PitchScaler\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\SpectrumAnalyzerComponent.h">
       <Filter>PitchScaler\Source</Filter>
     </ClInclude>
   </ItemGroup>

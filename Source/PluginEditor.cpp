@@ -13,6 +13,7 @@
 //==============================================================================
 PitchScalerAudioProcessorEditor::PitchScalerAudioProcessorEditor (PitchScalerAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p),
+    spectrumAnalyzer(std::make_shared<SpectrumAnalyzerComponent>()),
     octaveShiftSliderAttachment(audioProcessor.apvts, "Octave Shift", octaveShiftSlider),
     semiTomeShiftSliderAttachment(audioProcessor.apvts, "Semitone Shift", semiTomeShiftSlider),
     centShiftSliderAttachment(audioProcessor.apvts, "Cent Shift", centShiftSlider),
@@ -21,8 +22,8 @@ PitchScalerAudioProcessorEditor::PitchScalerAudioProcessorEditor (PitchScalerAud
     formantCentSliderAttachment(audioProcessor.apvts, "Cent Formant", formantCentSlider),
     drySliderAttachment(audioProcessor.apvts, "Dry Amount", drySlider),
     wetSliderAttachment(audioProcessor.apvts, "Wet Amount", wetSlider),
-    crispynessSliderAttachment(audioProcessor.apvts, "Crispyness", crispynessSlider),
-	formantToggleAttachment(audioProcessor.apvts,"Formant Toggle",formantToggle)
+	crispynessSliderAttachment(audioProcessor.apvts, "Crispyness", crispynessSlider),
+    formantToggleAttachment(audioProcessor.apvts,"Formant Toggle",formantToggle)
 {
     for (auto* comp : getComps())
     {
@@ -31,7 +32,7 @@ PitchScalerAudioProcessorEditor::PitchScalerAudioProcessorEditor (PitchScalerAud
     setSize (600, 400);
 
     siderEditor();
-    
+
 }
 
 PitchScalerAudioProcessorEditor::~PitchScalerAudioProcessorEditor()
@@ -45,8 +46,8 @@ void PitchScalerAudioProcessorEditor::paint (juce::Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 
-    
-     
+
+
     sliderValueManipulator();
 }
 
@@ -56,11 +57,9 @@ void PitchScalerAudioProcessorEditor::resized()
 {
     auto bounds = getLocalBounds();
 
-    // set bounds for response area
-    auto responseArea = bounds.removeFromTop( bounds.getHeight() * 0.33);
-
-
-
+    // set bounds for the spectrumAnalyzer
+    auto spectrumArea = bounds.removeFromTop( bounds.getHeight() * 0.33).reduced(20);
+    spectrumAnalyzer->setBounds(spectrumArea);
 
     // set bounds for dry/wet sliders
     auto dryWetArea = bounds.removeFromLeft(bounds.getWidth() * 0.333);
@@ -74,7 +73,7 @@ void PitchScalerAudioProcessorEditor::resized()
     auto toggleButtonArea = crispynessArea.removeFromLeft(crispynessArea.getWidth() * 0.2);
     crispynessSlider.setBounds(crispynessArea);
     formantToggle.setBounds(toggleButtonArea);
-    
+
 
     //defining areas for the shiftsliders
     auto shiftArea = bounds.removeFromTop(bounds.getHeight() * 0.5);
@@ -112,13 +111,14 @@ void PitchScalerAudioProcessorEditor::resized()
 
 
 
-   
+
 }
 
 std::vector<juce::Component*> PitchScalerAudioProcessorEditor::getComps()
 {
     return
     {
+        &*spectrumAnalyzer,
         &octaveShiftSlider,
         &semiTomeShiftSlider,
         &centShiftSlider,
@@ -137,7 +137,7 @@ void PitchScalerAudioProcessorEditor::siderEditor()
 {
     crispynessSlider.setSliderStyle(juce::Slider::SliderStyle::LinearVertical);
 
-    
+
     semiTomeShiftSlider.setRotaryParameters(0.f, 6.28f, m_AtLimit);
     centShiftSlider.setRotaryParameters(0.f, 6.28f, m_AtCentLimit);
     formantSemitoneSlider.setRotaryParameters(0.f, 6.28f, m_AtFormantLimit);
@@ -161,27 +161,13 @@ void PitchScalerAudioProcessorEditor::sliderValueManipulator()
     if (octaveShiftSlider.getValue() == -2 && semiTomeShiftSlider.getValue() == 0)
     {
         m_AtLimit = true;
-        if (centShiftSlider.getValue() < 10)
-        {
-            m_AtCentLimit = true;
-        }
-        else
-        {
-            m_AtCentLimit = false;
-        }
+        m_AtCentLimit = centShiftSlider.getValue() < 10;
 
     }
     else if (octaveShiftSlider.getValue() == 2 && semiTomeShiftSlider.getValue() == m_SemitoneMax)
     {
         m_AtLimit = true;
-        if (centShiftSlider.getValue() > m_CentMax - 10)
-        {
-            m_AtCentLimit = true;
-        }
-        else
-        {
-            m_AtCentLimit = false;
-        }
+        m_AtCentLimit = centShiftSlider.getValue() > m_CentMax - 10;
     }
     else
     {
@@ -190,11 +176,11 @@ void PitchScalerAudioProcessorEditor::sliderValueManipulator()
 
     semiTomeShiftSlider.setRotaryParameters(0.f, 6.28f, m_AtLimit);
     centShiftSlider.setRotaryParameters(0.f, 6.28f, m_AtCentLimit);
-    
+
 
     semiTomeShiftSlider.onValueChange = [this]()
     {
-        
+
         if (semiTomeShiftSlider.getValue() == m_SemitoneMax && m_SemiToneValue == 0)
         {
             octaveShiftSlider.setValue(octaveShiftSlider.getValue() - 1);
@@ -208,7 +194,6 @@ void PitchScalerAudioProcessorEditor::sliderValueManipulator()
 
     centShiftSlider.onValueChange = [this]()
     {
-        std::cout << centShiftSlider.getValue() << std::endl;
         if (round(centShiftSlider.getValue()) > m_CentMax - 10 && m_CentValue < 10)
         {
             if (semiTomeShiftSlider.getValue() == 0 && octaveShiftSlider.getValue() != -2)
@@ -226,32 +211,18 @@ void PitchScalerAudioProcessorEditor::sliderValueManipulator()
         }
         m_CentValue = round(centShiftSlider.getValue());
     };
-    
+
     //formant manipulation
     if (formantOctaveSlider.getValue() == -2 && formantSemitoneSlider.getValue() == 0)
     {
         m_AtFormantLimit = true;
-        if (formantCentSlider.getValue() < 10)
-        {
-            m_AtFormantCentLimit = true;
-        }
-        else
-        {
-            m_AtFormantCentLimit = false;
-        }
+        m_AtFormantCentLimit = formantCentSlider.getValue() < 10;
 
     }
     else if (formantOctaveSlider.getValue() == 2 && formantSemitoneSlider.getValue() == m_SemitoneMax)
     {
         m_AtFormantLimit = true;
-        if (formantCentSlider.getValue() > m_CentMax - 10)
-        {
-            m_AtFormantCentLimit = true;
-        }
-        else
-        {
-            m_AtFormantCentLimit = false;
-        }
+        m_AtFormantCentLimit = formantCentSlider.getValue() > m_CentMax - 10;
     }
     else
     {
@@ -278,7 +249,6 @@ void PitchScalerAudioProcessorEditor::sliderValueManipulator()
 
     formantCentSlider.onValueChange = [this]()
     {
-        std::cout << formantCentSlider.getValue() << std::endl;
         if (round(formantCentSlider.getValue()) > m_CentMax - 10 && m_CentFormantValue < 10)
         {
             if (formantSemitoneSlider.getValue() == 0 && formantOctaveSlider.getValue() != -2)
@@ -296,7 +266,9 @@ void PitchScalerAudioProcessorEditor::sliderValueManipulator()
         }
         m_CentFormantValue = round(formantCentSlider.getValue());
     };
-    
-    
-    
+
+}
+
+std::shared_ptr<SpectrumAnalyzerComponent> PitchScalerAudioProcessorEditor::getSpectrumAnalyzerComponent() {
+    return spectrumAnalyzer;
 }
